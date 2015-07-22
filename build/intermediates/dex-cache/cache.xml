@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\libs\microsoft-band-1.3.10428.1.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="f3da45109884b30fbfd70e3bd2835d99a730acd8">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\debug\microsoft-band-1.3.10428.1-eb3c34a1d8940de006eeaf5b84a0c8be6f910e9e.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\libs\android-async-http-1.4.7.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="cd78109020f9ec803ef4e652c17ee4615b03e20a">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.7-eab3f07bc25f26d433030edd1f4410cb9ffab7b3.jar" />
+    </item>
+
+</items>
