@@ -14,5 +14,11 @@ public class AutoStart extends BroadcastReceiver {
         Intent intent = new Intent(arg0,MyService.class);
         arg0.startService(intent);
         Log.i("Autostart", "started");
+
+
+//        Intent intent2 = new Intent(arg0, SensingService.class );
+//        arg0.startActivity(intent2);
+//        Log.i("Sensing","Sensing service started");
+
     }
 }

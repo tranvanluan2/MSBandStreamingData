@@ -123,7 +123,7 @@ public class MyService extends Service {
                         uploadFile(MyService.service);
                         try {
                             Log.d(TAG,"Da vao day!");
-                            sleep(300000);
+                            sleep(60000);
                         }
                         catch(Exception e){}
 

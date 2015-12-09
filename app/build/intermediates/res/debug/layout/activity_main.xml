@@ -18,22 +18,32 @@
         android:visibility="gone"
         android:text="@string/start" />
 
+
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/activity_spinner"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start monitoring"
-        android:id="@+id/button_monitor" />
+        android:id="@+id/button_monitor"
+        android:visibility="gone"/>
+    <Button
+        android:id="@+id/btnService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_monitor"
+        android:text="Stop Sensing Serivce" />
 
     <TextView
         android:id="@+id/txtStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/btnService"
         android:text="" />
 
     <TextView
@@ -94,6 +104,24 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/skin"
         android:text="" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtUV"
+        android:text="location o day" />
+
+
+    <Button
+        android:id="@+id/map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/location"
+        android:text="Show Map"
+        android:visibility="gone"
+        />
+
 
 </LinearLayout>
 

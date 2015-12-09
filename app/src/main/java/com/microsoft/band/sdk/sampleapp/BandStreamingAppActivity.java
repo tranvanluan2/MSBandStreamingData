@@ -17,6 +17,11 @@
 //IN THE SOFTWARE.
 package com.microsoft.band.sdk.sampleapp;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -51,9 +56,18 @@ import com.microsoft.band.sensors.HeartRateConsentListener;
 
 
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.app.Activity;
@@ -72,42 +86,68 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
-public class BandStreamingAppActivity extends Activity  implements AdapterView.OnItemSelectedListener {
+public class BandStreamingAppActivity extends Activity  implements AdapterView.OnItemSelectedListener ,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-	private BandClient client = null;
-	private Button btnStart;
+    private static final String REQUESTING_LOCATION_UPDATES_KEY = "request_location_update";
+    private static final String LOCATION_KEY = "current_location";
+    private static final String LAST_UPDATED_TIME_STRING_KEY = "last_update_time" ;
+    private BandClient client = null;
 	private TextView txtStatus;
-    private TextView caloriesStatus;
-    private TextView accelerometerStatus;
-    private TextView contactStatus;
-    private TextView distanceStatus;
-    private TextView gyroscopeStatus;
-    private TextView heartRateStatus;
-    private TextView pedometerStatus;
-    private TextView skinTemperatureStatus;
-    private TextView uvStatus;
 
+    public static ArrayList<String> locationList = new ArrayList<>();
+    private TextView locationStatus;
+    private TextView acceleratorStatus;
+    private TextView caloriesStatus;
+    private TextView gyroscopeStatus;
+    private TextView hearbeatStatus;
+    private TextView uvStatus;
+    private TextView skinStatus;
+    private TextView pedometerStatus;
+    private TextView contactStatus;
     private Button monitorButton;
+    private Button sensingButton;
+    private Button mapButton;
     private Spinner activitySpinner;
     public static Activity mainActivity;
 
 
-    public static  ArrayList<String> heartRateList = new ArrayList<>();
-    public static  ArrayList<String> acceleratorList = new ArrayList<>();
-    public static ArrayList<String> caloriesList = new ArrayList<>();
-    public static ArrayList<String> contactList = new ArrayList<>();
-    public static ArrayList<String> distanceList = new ArrayList<>();
-    public static ArrayList<String> gyroscopeList = new ArrayList<>();
-    public static ArrayList<String> pedometerList = new ArrayList<>();
-    public static ArrayList<String> skinTemperatureList = new ArrayList<>();
-    public static ArrayList<String> uvEventsList = new ArrayList<>();
+
     public static boolean isMonitoring = false;
     public static String activityType="";
     public static long startTime;
     public static long endTime;
+    private Location mCurrentLocation;
+    private String mLastUpdateTime;
+    LocationRequest mLocationRequest;
+    private boolean mRequestingLocationUpdates =true;
+    private GoogleApiClient mGoogleApiClient;
+
+    public BroadcastReceiver receiver;
+
+
+    /** Defines callbacks for service binding, passed to bindService() */
+//    private ServiceConnection mConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName className,
+//                                       IBinder service) {
+//            // We've bound to LocalService, cast the IBinder and get LocalService instance
+//            SensingService.LocalBinder binder = (SensingService.LocalBinder) service;
+//            sensingService = binder.getService();
+//            mBound = true;
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName arg0) {
+//            mBound = false;
+//        }
+//    };
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
@@ -121,24 +161,33 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
         // Another interface callback
         activityType = "";
     }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainActivity = this;
         txtStatus = (TextView) findViewById(R.id.txtStatus);
-        caloriesStatus = (TextView) findViewById(R.id.txtCaloriesStatus);
-        accelerometerStatus = (TextView) findViewById(R.id.accelerometer);
-        contactStatus = (TextView)findViewById(R.id.txtContact);
-        distanceStatus = (TextView) findViewById(R.id.txtDistance);
-        gyroscopeStatus = (TextView) findViewById(R.id.txtGyroscope);
-        heartRateStatus = (TextView) findViewById(R.id.txtHeartRate);
-        pedometerStatus = (TextView) findViewById(R.id.pedometer);
-        skinTemperatureStatus = (TextView) findViewById(R.id.skin);
-        uvStatus = (TextView) findViewById(R.id.txtUV);
-        btnStart = (Button) findViewById(R.id.btnStart);
         monitorButton = (Button) findViewById(R.id.button_monitor);
         activitySpinner = (Spinner) findViewById(R.id.activity_spinner);
+        locationStatus = (TextView) findViewById(R.id.location);
+        acceleratorStatus = (TextView)findViewById(R.id.accelerometer);
+        hearbeatStatus = (TextView)findViewById(R.id.txtHeartRate);
+        caloriesStatus = (TextView)findViewById(R.id.txtCaloriesStatus);
+        gyroscopeStatus = (TextView)findViewById(R.id.txtGyroscope);
+        pedometerStatus = (TextView)findViewById(R.id.pedometer);
+        uvStatus = (TextView)findViewById(R.id.txtUV);
+        skinStatus = (TextView)findViewById(R.id.skin);
+        contactStatus = (TextView)findViewById(R.id.txtContact);
+        sensingButton = (Button) findViewById(R.id.btnService);
+        mapButton = (Button) findViewById(R.id.map);
 
 
 
@@ -152,13 +201,14 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         activitySpinner.setAdapter(adapter);
-        btnStart.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				txtStatus.setText("");
-				new appTask().execute();
-			}
-		});
+//        btnStart.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				txtStatus.setText("");
+//				new appTask().execute();
+//			}
+//		});
+
         monitorButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,12 +218,12 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
                     isMonitoring = true;
                     startTime = System.currentTimeMillis();
                     monitorButton.setText("Stop monitoring");
-
+                    mainActivity.getWindow().getDecorView().setBackgroundColor(Color.RED);
 
                 }
                 else{
                     //disable monitoring mode
-
+                    mainActivity.getWindow().getDecorView().setBackgroundColor(Color.WHITE);
                     isMonitoring = false;
                     monitorButton.setText("Start monitoring");
                     endTime = System.currentTimeMillis();
@@ -188,14 +238,182 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
             }
         });
 
+        mapButton.setOnClickListener(new OnClickListener() {
+
+             @Override
+             public void onClick(View v) {
+
+                Intent intent = new Intent(mainActivity, MapsActivity.class);
+                startActivity(intent);
+             }
+
+        });
+
+        sensingButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isMyServiceRunning(SensingService.class)){
+
+                    if(mService!=null) mService.isSensing = false;
+
+                    stopService(new Intent(mainActivity, SensingService.class));
+
+                    try {
+                        unbindService(mConnection);
+                    }catch(Exception e){}
+                    mBound = false;
+                    stopLocationUpdates();
+
+                    sensingButton.setText("Start sensing service");
+                    mainActivity.getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+
+                }
+                else {
+                    if(mService!=null) mService.isSensing = true;
 
 
-       // uploadFile(getApplicationContext());
+                    Intent intent = new Intent(mainActivity, SensingService.class);
+                    startService(intent);
+                    try {
+                    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+                    }catch(Exception e){}
+                    mBound= true;
+                    startLocationUpdates();
+                    sensingButton.setText("Stop sensing service");
+                    mainActivity.getWindow().getDecorView().setBackgroundColor(Color.RED);
+                }
+
+            }
+        });
+
+
+
+
+        //call google play service
+        buildGoogleApiClient();
+        mGoogleApiClient.connect();
+
+        updateValuesFromBundle(savedInstanceState);
+        createLocationRequest();
+
+
+        // uploadFile(getApplicationContext());
         if(!isMyServiceRunning(MyService.class)){
             // use this to start and trigger a service
             Intent i= new Intent(this, MyService.class);
             // potentially add data to the intent
             this.startService(i);
+
+
+        }
+
+
+        // Bind to LocalService
+        Intent intent = new Intent(this, SensingService.class);
+        this.startService(intent);
+
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //create a thread to get new values from sensor // Bind to LocalService
+
+        intent = new Intent(this, SensingService.class);
+       // this.startService(intent);
+
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //create a thread to get new values from sensor
+
+
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s = intent.getStringExtra("message");
+                String type = intent.getStringExtra("type");
+
+             //   Log.d("Sensing", "RECEIVE: "+s+" , type= "+type);
+                appendToUI(s, type);
+                // do something here.
+            }
+        };
+
+
+
+
+
+
+
+    }
+    SensingService mService;
+    boolean mBound = false;
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            SensingService.LocalBinder binder = (SensingService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+    @Override
+    protected void onStop() {
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
+                new IntentFilter("SENSING_RESULT")
+        );
+
+//
+    }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            // Update the value of mRequestingLocationUpdates from the Bundle, and
+            // make sure that the Start Updates and Stop Updates buttons are
+            // correctly enabled or disabled.
+            if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
+                mRequestingLocationUpdates = savedInstanceState.getBoolean(
+                        REQUESTING_LOCATION_UPDATES_KEY);
+              //  setButtonsEnabledState();
+            }
+
+            // Update the value of mCurrentLocation from the Bundle and update the
+            // UI to show the correct latitude and longitude.
+            if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
+                // Since LOCATION_KEY was found in the Bundle, we can be sure that
+                // mCurrentLocationis not null.
+                mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+            }
+
+            // Update the value of mLastUpdateTime from the Bundle and update the UI.
+            if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
+                mLastUpdateTime = savedInstanceState.getString(
+                        LAST_UPDATED_TIME_STRING_KEY);
+            }
+            appendToUI("longitude = " + mCurrentLocation.getLongitude() + "latitude = " +
+                    mCurrentLocation.getLatitude() +
+                    "updated at: " + mLastUpdateTime, "location");
+
+
         }
     }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -211,21 +429,87 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
 
 	@Override
 	protected void onResume() {
-		super.onResume();
-		txtStatus.setText("");
+        super.onResume();
+
+        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+
+
 	}
 	
     @Override
 	protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 		super.onPause();
 //		if (client != null) {
 //			//try {
 ////				client.getSensorManager().unregisterAccelerometerEventListeners();
 ////			//}
 //		}
+
+      //  stopLocationUpdates();
 	}
-	
-	public   class appTask extends AsyncTask<Void, Void, Void> {
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY,
+                mRequestingLocationUpdates);
+        savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
+        savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+
+    }
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mCurrentLocation = location;
+        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        appendToUI("Longitude = " + location.getLongitude() + "\nLatitude = " + location.getLatitude() +
+                "\nUpdated at: " + mLastUpdateTime, "location");
+        appendToList(mCurrentLocation.getLongitude()+","+
+                mCurrentLocation.getLatitude()+"," +
+                mCurrentLocation.getAltitude()+","+
+                mCurrentLocation.getProvider()+","+
+                mCurrentLocation.getAccuracy()+","+
+                System.currentTimeMillis()+"\n","location");
+    }
+
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    public   class appTask extends AsyncTask<Void, Void, Void> {
 
 
 
@@ -252,14 +536,6 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
 			try {
 				if (getConnectedBandClient()) {
 					appendToUI("Band is connected.\n",null);
-					client.getSensorManager().registerAccelerometerEventListener(mAccelerometerEventListener, SampleRate.MS16);
-                    client.getSensorManager().registerCaloriesEventListener(mCaloriesEventListener);
-                    client.getSensorManager().registerContactEventListener(mContactEventListener);
-                    client.getSensorManager().registerDistanceEventListener(mDistanceEventListener);
-                    client.getSensorManager().registerGyroscopeEventListener(mGyroscopeEventListener,SampleRate.MS16);
-                    client.getSensorManager().registerPedometerEventListener(mPedometerEventListener);
-                    client.getSensorManager().registerSkinTemperatureEventListener(mSkinTemperatureEventListener);
-                    client.getSensorManager().registerUVEventListener(mUVEventListener);
                     // check current user heart rate consent
                     if(client.getSensorManager().getCurrentHeartRateConsent() !=
                             UserConsent.GRANTED) {
@@ -268,7 +544,7 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
                         // HeartRateConsentListener
                         client.getSensorManager().requestHeartRateConsent(BandStreamingAppActivity.mainActivity, heartRateConsentListener);
                     }
-                    else client.getSensorManager().registerHeartRateEventListener(mHeartRateEventListener);
+
 
                 } else {
 					appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n",null);
@@ -299,7 +575,7 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
 
     private void saveToFile(ArrayList<String> array, final String filename, final String directory ){
 
-
+        if(array.size() == 0 ) return;
 
         Log.d("Write file", "Van dang chay va write file");
         if(filename.equals("activity"))
@@ -328,69 +604,20 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
 
     public void writeAllArrayToFile(){
 
-        saveToFile(acceleratorList, "accelerometer_"+System.currentTimeMillis(),"accelerometer");
-        saveToFile(caloriesList,"calories_"+System.currentTimeMillis(),"calories");
-        saveToFile(contactList,"contact_"+System.currentTimeMillis(),"contact");
-        saveToFile(distanceList,"distance_"+System.currentTimeMillis(),"distance");
-        saveToFile(gyroscopeList,"gyroscope_"+System.currentTimeMillis(),"gyroscope");
-        saveToFile(heartRateList,"heartrate_"+System.currentTimeMillis(),"heartrate");
-        saveToFile(pedometerList,"pedometer_"+System.currentTimeMillis(),"pedometer");
-        saveToFile(skinTemperatureList,"skin_"+System.currentTimeMillis(),"skin");
-        saveToFile(uvEventsList,"uv_"+System.currentTimeMillis(),"uv");
         saveToFile(new ArrayList<>(Arrays.asList(activitySpinner.getSelectedItem().toString()+","+startTime+","+endTime+"\n")),
                 "activity","activity");
+        saveToFile(locationList,"location_"+System.currentTimeMillis(),"location");
 
     }
     private void appendToList(final String string, final String sensor_type){
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(sensor_type.equals("accelerometer"))
-                {
-                    acceleratorList.add(string);
-                    if(acceleratorList.size()>=1000)
-                        saveToFile(acceleratorList, "accelerometer_"+System.currentTimeMillis(),"accelerometer");
 
-                }
-                else if(sensor_type.equals("calories")) {
-                    caloriesList.add(string);
-                    if(caloriesList.size() >= 1000)
-                        saveToFile(caloriesList,"calories_"+System.currentTimeMillis(),"calories");
-                }
-                else if(sensor_type.equals("contact")) {
-                    contactList.add(string);
-                    if(contactList.size() >= 1000)
-                        saveToFile(contactList,"contact_"+System.currentTimeMillis(),"contact");
-                }
-                else if(sensor_type.equals("distance")) {
-                    distanceList.add(string);
-                    if(distanceList.size() >= 1000)
-                        saveToFile(distanceList,"distance_"+System.currentTimeMillis(),"distance");
-                }
-                else if(sensor_type.equals("gyroscope")) {
-                    gyroscopeList.add(string);
-                    if(gyroscopeList.size() >= 1000)
-                        saveToFile(gyroscopeList,"gyroscope_"+System.currentTimeMillis(),"gyroscope");
-                }
-                else if(sensor_type.equals("heartrate")) {
-                    heartRateList.add(string);
-                    if(heartRateList.size() >= 1000)
-                        saveToFile(heartRateList,"heartrate_"+System.currentTimeMillis(),"heartrate");
-                }
-                else if(sensor_type.equals("pedometer")) {
-                    pedometerList.add(string);
-                    if(pedometerList.size() >= 1000)
-                        saveToFile(pedometerList,"pedometer_"+System.currentTimeMillis(),"pedometer");
-                }
-                else if(sensor_type.equals("skin")) {
-                    skinTemperatureList.add(string);
-                    if(skinTemperatureList.size() >= 1000)
-                        saveToFile(skinTemperatureList,"skin_"+System.currentTimeMillis(),"skin");
-                }
-                else if(sensor_type.equals("uv")) {
-                    uvEventsList.add(string);
-                    if(uvEventsList.size() >= 1000)
-                        saveToFile(uvEventsList,"uv_"+System.currentTimeMillis(),"uv");
+                if(sensor_type.equals("location") ){
+                    locationList.add(string);
+                    if(locationList.size() >= 20)
+                        saveToFile(locationList, "location_"+System.currentTimeMillis(),"location");
                 }
 
             }
@@ -405,24 +632,34 @@ public class BandStreamingAppActivity extends Activity  implements AdapterView.O
                     txtStatus.setText(string);
                 }
                 else if(sensor_type.equals("accelerometer"))
-            	    accelerometerStatus.setText(string);
-                else if(sensor_type.equals("calories"))
-                    caloriesStatus.setText(string);
-                else if(sensor_type.equals("contact"))
-                    contactStatus.setText(string);
-                else if(sensor_type.equals("distance"))
-                    distanceStatus.setText(string);
-                else if(sensor_type.equals("gyroscope"))
-                    gyroscopeStatus.setText(string);
-                else if(sensor_type.equals("heartrate"))
-                    heartRateStatus.setText(string);
-                else if(sensor_type.equals("pedometer"))
-                    pedometerStatus.setText(string);
-                else if(sensor_type.equals("skin"))
-                    skinTemperatureStatus.setText(string);
-                else if(sensor_type.equals("uv"))
-                    uvStatus.setText(string);
+                    acceleratorStatus.setText(string);
 
+                else if(sensor_type.equals("calories")){
+                    caloriesStatus.setText(string);
+                }
+                else if(sensor_type.equals("contact")) {
+                    contactStatus.setText(string);
+                }
+
+                else if(sensor_type.equals("distance")) {
+                    pedometerStatus.setText(string);
+                }
+                else if(sensor_type.equals("gyroscope")) {
+                    gyroscopeStatus.setText(string);
+                }
+                else if(sensor_type.equals("heartrate")) {
+                    hearbeatStatus.setText(string);
+                }
+                else if(sensor_type.equals("pedometer")) {}
+                else if(sensor_type.equals("skin")) {
+                    skinStatus.setText(string);
+                }
+                else if(sensor_type.equals("uv")) {
+                    uvStatus.setText(string);
+                }
+                else if(sensor_type.equals("location"))
+
+                    locationStatus.setText(string);
 
 
 

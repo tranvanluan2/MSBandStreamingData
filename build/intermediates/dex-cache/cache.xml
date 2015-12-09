@@ -2,18 +2,179 @@
 <items version="2" >
 
     <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appstate\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="7ff613bf78ab057293892fdbd4169eda899c89b9">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-4d28ad3f3712a38c7b980db3297256a98a4f432a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="1c5a76debf0c2857ccad422c4a80ed785982f8df">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-2ce93b1bc0ba53a3ea719e96be4a9be0696d5269.jar" />
+    </item>
+    <item
         jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\libs\microsoft-band-1.3.10428.1.jar"
         jumboMode="false"
         revision="22.0.0"
         sha1="f3da45109884b30fbfd70e3bd2835d99a730acd8">
-        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\debug\microsoft-band-1.3.10428.1-eb3c34a1d8940de006eeaf5b84a0c8be6f910e9e.jar" />
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\microsoft-band-1.3.10428.1-eb3c34a1d8940de006eeaf5b84a0c8be6f910e9e.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="4cd0b093824b3228fffc21ea369b98d0b1db6566">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-201961c1ba4ac3c500d36ecade9b8bd32708e18a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="17f8750d5c0749e44dd7c54aa390d9c937803825">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-b53b9770e8e441ad0e74194a01a0a49629c0b52e.jar" />
     </item>
     <item
         jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\libs\android-async-http-1.4.7.jar"
         jumboMode="false"
         revision="22.0.0"
         sha1="cd78109020f9ec803ef4e652c17ee4615b03e20a">
-        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.7-eab3f07bc25f26d433030edd1f4410cb9ffab7b3.jar" />
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\android-async-http-1.4.7-eab3f07bc25f26d433030edd1f4410cb9ffab7b3.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="ef5f051e7308febe289dc93c67c5f32785b4260a">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-07155ee74608669c7aba0ade53b354862c140581.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="9224bc4c54ba95147c7eabd874573763c07cb6be">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-6198cfb66117a082efa55f3b2d27ab7888c4ae35.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="e3d791b42eaa90416cd0b2d2e608092794a3baa4">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-6805bb16395b36a20c769067e9f04f3a31b4df92.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="29fd6d3794b71491c2789708cd8d03c71feb8954">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-9f44d59ab8f2d6c17dc849a789c68880bb5a669e.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="4c93d99d454c975536bbe3b42283eee847f03ea3">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-d67c1b97597d7b48709f68cab5adca93ca6559b0.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\libs\internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\internal_impl-22.0.0-b5780d671d466d6aa9ae992b77ee1e1aeebc766f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="fb04b12526b0073c7fb1ebb70c5842d82ee95596">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-00ecb1b65c9b39fbc310146696878a7231021afe.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="3033cc3a2c68dff3e5b646d6d084bdbdf7d00b25">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-09fc128629261f7f397a279e430c0c50db0b5865.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="41b3870cbe5fa546d8095b5b89d42cb69f3dd175">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-b3b764c4f54c7cda4f0abf673e02152b41ae43e4.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="c976518693e89ad44fbfccfc654941eaec198d08">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-d78a9d845350172027aadca0f55911109bd9c73a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="a08d65794b844d8e7540bf9a33859bf3b2482d7f">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-62704ddf187b573fd52420bbef694306682b94f5.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="3c0b099f9de16b265ecd6122fcb603e7d0d29f90">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-86a113e607d1bdd772f2e878ceded89de77bac0a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="0e8228b4bc69c6a2c8d7c18498a77e53417d2574">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-9b749b987e6999b0907dfe61b28bb063d72b212b.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="73ccb92b70112f2e463e415ef8d7275de7da6516">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-1bcec5d955165c886d96fd0799746d01f524a565.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-b1a7fc483bf872d54e89f9cc65155d998faf40c2.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="a96b762bde4139de855735f175ec4d17dca55a6d">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-c12ab5db87b7b8d4861580d0e3659139814d0415.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-0b64ece9d9765a6b95450a4502ec07b163065910.jar" />
+    </item>
+    <item
+        jar="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="055783146ba9654a725442563be78cad303aad1f">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\classes-305ddadf3e36b760fb4e6409c5f43212d74e9319.jar" />
+    </item>
+    <item
+        jar="E:\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.0.0\support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="C:\Users\Luan\Downloads\template_example-master\BandStreamingApp\app\build\intermediates\pre-dexed\release\support-annotations-22.0.0-783e10862c8c3255c39ce035e99d8e79f6798efc.jar" />
     </item>
 
 </items>
